@@ -1,0 +1,79 @@
+import React, { useState, useEffect } from 'react';
+
+const AccountPage = () => {
+  const [userData, setUserData] = useState(null);
+
+  // Fetch user data when the component mounts
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/user', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // You may need to include authentication headers here if required
+        });
+
+        if (response.ok) {
+          const user = await response.json();
+          setUserData(user);
+        } else {
+          console.error('Failed to fetch user data');
+        }
+      } catch (error) {
+        console.error('Error during user data fetching:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleUpdate = () => {
+    // Handle update logic
+    console.log('Update button clicked');
+  };
+
+  const handleDelete = () => {
+    // Handle delete logic
+    console.log('Delete button clicked');
+  };
+
+  if (!userData) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="container mx-auto mt-8">
+      <h1 className="text-3xl font-semibold mb-4">Account Information</h1>
+      <p>Welcome, {userData.username}!</p>
+
+      <div className="mt-4">
+        <strong>Username:</strong> {userData.username}
+      </div>
+      <div className="mt-2">
+        <strong>Email:</strong> {userData.email}
+      </div>
+      {/* Add more user information fields as needed */}
+
+      <div className="mt-4">
+        <button
+          type="button"
+          onClick={handleUpdate}
+          className="bg-green-500 text-white p-2 rounded hover:bg-green-600 mr-2"
+        >
+          Update
+        </button>
+        <button
+          type="button"
+          onClick={handleDelete}
+          className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default AccountPage;
